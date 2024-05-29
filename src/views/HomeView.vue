@@ -141,12 +141,12 @@ function restart() {
     <div class="w-full flex justify-center">
       <span v-if="has_lost" class="text-[#ff0000] text-2xl">You Lost!</span>
     </div>
-    <div class="w-[400px] h-[400px] bg-[#FFFFFF] flex-col">
+    <div class="w-[400px] h-[400px] bg-[#ffffff] flex-col">
       <div v-for="y in 3" class="flex flex-row w-full h-1/3">
         <div
           v-for="x in 3"
           @click="round(x, y)"
-          :class="`w-1/3 h-full border-[#000000] border-2 flex justify-center items-center ${has_won || has_lost || !clickable ? 'pointer-events-none' : 'pointer-events-auto'}`"
+          :class="`w-1/3 h-full border-dark_green border-2 flex justify-center items-center ${has_won || has_lost || !clickable ? 'pointer-events-none' : 'pointer-events-auto'}`"
         >
           <div
             v-if="player[y - 1][x - 1]"
@@ -161,11 +161,12 @@ function restart() {
     </div>
     <div class="w-full flex justify-center">
       <button
-        v-if="has_won || has_lost || tie"
         @click="restart"
-        class="text-2xl text-dark_green"
+        class="mt-5 border-dark_green border-2 rounded-full"
       >
-        Play again
+        <span class="text-2xl text-dark_green p-3">{{
+          has_won || has_lost || tie ? "Play again" : "Restart Game"
+        }}</span>
       </button>
     </div>
   </div>
