@@ -108,7 +108,7 @@ function round(x: number, y: number) {
     computer_move();
     check_condition(computer.value, false);
     clickable.value = true;
-  }, 1000);
+  }, 400);
 }
 
 function restart() {
@@ -133,37 +133,47 @@ function restart() {
 <template>
   <div class="w-full h-full flex flex-col justify-center items-center">
     <div class="w-full flex justify-center">
-      <span v-if="has_won" class="text-dark_green text-2xl">You Won!</span>
+      <span v-if="has_won" class="mb-8 text-dark_green text-2xl">You Won!</span>
     </div>
     <div class="w-full flex justify-center">
-      <span v-if="tie" class="text-dark_green text-2xl">It is a tie!</span>
+      <span v-if="tie" class="mb-8 text-dark_green text-2xl">It is a tie!</span>
     </div>
     <div class="w-full flex justify-center">
-      <span v-if="has_lost" class="text-[#ff0000] text-2xl">You Lost!</span>
+      <span v-if="has_lost" class="mb-8 text-[#ff0000] text-2xl"
+        >You Lost!</span
+      >
     </div>
-    <div class="w-[400px] h-[400px] bg-[#ffffff] flex-col">
-      <div v-for="y in 3" class="flex flex-row w-full h-1/3">
-        <div
-          v-for="x in 3"
-          @click="round(x, y)"
-          :class="`w-1/3 h-full border-dark_green border-2 flex justify-center items-center ${has_won || has_lost || !clickable ? 'pointer-events-none' : 'pointer-events-auto'}`"
-        >
-          <div
-            v-if="player[y - 1][x - 1]"
-            class="rounded-full border-2 w-[40px] h-[40px] border-dark_green"
-          ></div>
-          <div
-            v-if="computer[y - 1][x - 1]"
-            class="rounded-full border-2 w-[40px] h-[40px] bg-dark_green"
-          ></div>
+    <div class="w-[400px] h-[400px] flex-col">
+      <div v-for="y in 3" class="flex flex-col w-full h-1/3">
+        <div class="h-[99%] w-full flex flex-row">
+          <div v-for="x in 3" class="w-1/3 h-full flex flex-row">
+            <div
+              @click="round(x, y)"
+              :class="`w-[99%] h-full flex justify-center items-center ${has_won || has_lost || !clickable ? 'pointer-events-none' : 'pointer-events-auto'}`"
+            >
+              <div
+                v-if="player[y - 1][x - 1]"
+                class="rounded-full border-2 w-[40px] h-[40px] border-dark_green"
+              ></div>
+              <div
+                v-if="computer[y - 1][x - 1]"
+                class="rounded-full border-2 w-[40px] h-[40px] bg-dark_green"
+              ></div>
+            </div>
+            <div
+              v-if="x == 1 || x == 2"
+              class="border-2 border-dark_green h-full w-[1%]"
+            ></div>
+          </div>
         </div>
+        <div
+          v-if="y == 1 || y == 2"
+          class="border-2 border-dark_green w-full h-[1%]"
+        ></div>
       </div>
     </div>
-    <div class="w-full flex justify-center">
-      <button
-        @click="restart"
-        class="mt-5 border-dark_green border-2 rounded-full"
-      >
+    <div class="mt-8 w-full flex justify-center">
+      <button @click="restart" class="border-dark_green border-2 rounded-full">
         <span class="text-2xl text-dark_green p-3">{{
           has_won || has_lost || tie ? "Play again" : "Restart Game"
         }}</span>
