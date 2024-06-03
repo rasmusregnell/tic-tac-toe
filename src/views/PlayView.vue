@@ -1,6 +1,10 @@
 <script setup lang="ts">
 import { ref } from "vue";
 
+interface PingResponse {
+  pong: string;
+}
+
 const player = ref([
   [false, false, false],
   [false, false, false],
@@ -17,6 +21,77 @@ const clickable = ref(true);
 const has_won = ref(false);
 const has_lost = ref(false);
 const tie = ref(false);
+
+// transform board to a flattened array, which fits format in python
+// computer = 1, player = 2, since model is trained on playing as 1
+function transform_board(): number[] {
+  const board: number[][] = Array.from({ length: 3 }, () => Array(3).fill(0));
+  for (let y = 0; y < 3; y++) {
+    for (let x = 0; x < 3; x++) {
+      if (player.value[y][x]) {
+        board[y][x] = 2;
+      }
+      if (computer.value[y][x]) {
+        board[y][x] = 1;
+      }
+    }
+  }
+  return board.flat(1);
+}
+
+// updates player and computer arrays based on array in flattened format
+function update_board(arr: number[]): void {
+  const board: number[][] = [];
+  // turn into 2d array
+  for (let i = 0; i < arr.length; i += 3) {
+    board.push(arr.slice(i, i + 3));
+  }
+
+  // update player and computer
+  for (let y = 0; y < 3; y++) {
+    for (let x = 0; x < 3; x++) {
+      if (board[y][x] == 2) {
+        player.value[y][x] = true;
+      }
+      if (board[y][x] == 1) {
+        computer.value[y][x] = true;
+      }
+    }
+  }
+}
+
+// Send board to REST,
+async function model_move() {
+  // board is transfromed to fit expected format number[]
+  const board = transform_board();
+
+  try {
+    //the board is sent to REST
+    const response = await fetch("http://localhost:5175/sendBoard", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(board),
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+
+    // New board in flattened format recieved from REST
+    const responseData = await response.json(); // Parse response JSON
+
+    console.log("Data sent successfully!");
+    console.log("Received response:", responseData);
+
+    // we update the board
+    update_board(responseData);
+  } catch (error) {
+    console.error("Error sending data and receiving response:", error);
+    throw error; // Propagate error to the caller
+  }
+}
 
 function check_has_won(board: boolean[][]): boolean {
   // Check rows
@@ -56,7 +131,7 @@ function get_possible_moves(): Array<Array<number>> {
   return possible_moves;
 }
 
-function computer_move() {
+function random_computer_move() {
   const possible_moves = get_possible_moves();
   const index =
     possible_moves[Math.floor(Math.random() * possible_moves.length)];
@@ -93,20 +168,20 @@ function check_condition(actor: Array<Array<boolean>>, player: boolean) {
 }
 
 function round(x: number, y: number) {
-  //player makes move
+  // check if there exists possible moves
   if (!get_possible_moves().find((e) => arraysEqual(e, [y - 1, x - 1]))) {
-    console.log("hej");
+    console.log("no possible moves found");
     return;
   }
-  //console.log(get_possible_moves());
+
+  //player makes move
   player.value[y - 1][x - 1] = true;
   if (check_condition(player.value, true)) {
     return;
   }
   clickable.value = false;
   setTimeout(() => {
-    computer_move();
-    check_condition(computer.value, false);
+    model_move().then((e) => check_condition(computer.value, false));
     clickable.value = true;
   }, 400);
 }
@@ -179,5 +254,10 @@ function restart() {
         }}</span>
       </button>
     </div>
+    <!-- <span>{{ get().then((data) => data.pong) }}</span> -->
+    <button
+      @click="model_move"
+      class="bg-dark_green w-[20px] h-[20px] mt-3"
+    ></button>
   </div>
 </template>
