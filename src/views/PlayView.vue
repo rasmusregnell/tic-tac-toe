@@ -60,7 +60,7 @@ function update_board(arr: number[]): void {
   }
 }
 
-// Send board to REST,
+// model from rest makes move, updates board
 async function model_move() {
   // board is transfromed to fit expected format number[]
   const board = transform_board();
@@ -82,8 +82,8 @@ async function model_move() {
     // New board in flattened format recieved from REST
     const responseData = await response.json(); // Parse response JSON
 
-    console.log("Data sent successfully!");
-    console.log("Received response:", responseData);
+    //console.log("Data sent successfully!");
+    //console.log("Received response:", responseData);
 
     // we update the board
     update_board(responseData);
@@ -96,23 +96,23 @@ async function model_move() {
 function check_has_won(board: boolean[][]): boolean {
   // Check rows
   for (let i = 0; i < 3; i++) {
-    if (board[i][0] === true && board[i][1] === true && board[i][2] === true) {
+    if (board[i][0] && board[i][1] && board[i][2]) {
       return true;
     }
   }
 
   // Check columns
   for (let j = 0; j < 3; j++) {
-    if (board[0][j] === true && board[1][j] === true && board[2][j] === true) {
+    if (board[0][j] && board[1][j] && board[2][j]) {
       return true;
     }
   }
 
   // Check diagonals
-  if (board[0][0] === true && board[1][1] === true && board[2][2] === true) {
+  if (board[0][0] && board[1][1] && board[2][2]) {
     return true;
   }
-  if (board[0][2] === true && board[1][1] === true && board[2][0] === true) {
+  if (board[0][2] && board[1][1] && board[2][0]) {
     return true;
   }
 
