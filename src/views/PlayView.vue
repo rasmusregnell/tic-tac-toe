@@ -254,7 +254,7 @@ function restart() {
         }}</span>
       </button>
     </div>
-    <!-- <span>{{ get().then((data) => data.pong) }}</span> -->
+    <!-- test button -->
     <button
       @click="model_move"
       class="bg-dark_green w-[20px] h-[20px] mt-3"
