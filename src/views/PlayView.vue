@@ -23,16 +23,15 @@ const has_lost = ref(false);
 const tie = ref(false);
 
 // transform board to a flattened array, which fits format in python
-// computer = 1, player = 2, since model is trained on playing as 1
 function transform_board(): number[] {
   const board: number[][] = Array.from({ length: 3 }, () => Array(3).fill(0));
   for (let y = 0; y < 3; y++) {
     for (let x = 0; x < 3; x++) {
       if (player.value[y][x]) {
-        board[y][x] = 2;
+        board[y][x] = 1;
       }
       if (computer.value[y][x]) {
-        board[y][x] = 1;
+        board[y][x] = 2;
       }
     }
   }
@@ -50,10 +49,10 @@ function update_board(arr: number[]): void {
   // update player and computer
   for (let y = 0; y < 3; y++) {
     for (let x = 0; x < 3; x++) {
-      if (board[y][x] == 2) {
+      if (board[y][x] == 1) {
         player.value[y][x] = true;
       }
-      if (board[y][x] == 1) {
+      if (board[y][x] == 2) {
         computer.value[y][x] = true;
       }
     }
@@ -174,16 +173,16 @@ function round(x: number, y: number) {
     return;
   }
 
-  //player makes move
   player.value[y - 1][x - 1] = true;
   if (check_condition(player.value, true)) {
     return;
   }
+
   clickable.value = false;
   setTimeout(() => {
     model_move().then((e) => check_condition(computer.value, false));
     clickable.value = true;
-  }, 400);
+  }, 700);
 }
 
 function restart() {
