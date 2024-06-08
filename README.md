@@ -1,39 +1,21 @@
-# tic-tac
+# tic-tac-toe, a vue application
 
-This template should help get you started developing with Vue 3 in Vite.
+## install dependencies
 
-## Recommended IDE Setup
+- npm install
 
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
+## Start development server on local host
 
-## Type Support for `.vue` Imports in TS
+- npm run dev
 
-TypeScript cannot handle type information for `.vue` imports by default, so we replace the `tsc` CLI with `vue-tsc` for type checking. In editors, we need [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) to make the TypeScript language service aware of `.vue` types.
+## How to play
 
-## Customize configuration
+The application relies on https://github.com/rasmusregnell/tic-tac-toe-RL, which contains a light REST API for sending and recieving tic-tac-toe boards. You can also use the function random_computer_move to play against a random agent instead.
 
-See [Vite Configuration Reference](https://vitejs.dev/config/).
+## Intention
 
-## Project Setup
+The purpose of this vue application was to be able to play against trained agents in the game of tic-tac-toe.
 
-```sh
-npm install
-```
+## Licence
 
-### Compile and Hot-Reload for Development
-
-```sh
-npm run dev
-```
-
-### Type-Check, Compile and Minify for Production
-
-```sh
-npm run build
-```
-
-### Lint with [ESLint](https://eslint.org/)
-
-```sh
-npm run lint
-```
+[MIT](https://choosealicense.com/licenses/mit/)

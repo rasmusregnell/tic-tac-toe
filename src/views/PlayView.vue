@@ -97,9 +97,6 @@ async function model_move() {
     // New board in flattened format recieved from REST
     const responseData = await response.json(); // Parse response JSON
 
-    //console.log("Data sent successfully!");
-    //console.log("Received response:", responseData);
-
     // we update the board
     update_board(responseData);
   } catch (error) {
@@ -146,6 +143,7 @@ function get_possible_moves(): Array<Array<number>> {
   return possible_moves;
 }
 
+// computer makes random move when this function is called
 function random_computer_move() {
   const possible_moves = get_possible_moves();
   const index =
@@ -153,6 +151,7 @@ function random_computer_move() {
   computer.value[index[0]][index[1]] = true;
 }
 
+// check if two arrays are equal
 function arraysEqual(a1: number[], a2: number[]): boolean {
   if (a1.length !== a2.length) {
     return false;
@@ -182,6 +181,7 @@ function check_condition(actor: Array<Array<boolean>>, player: boolean) {
   return false;
 }
 
+// a round of tic-tac-toe, where player and computer makes moves
 function round(x: number, y: number) {
   // check if there exists possible moves
   if (!get_possible_moves().find((e) => arraysEqual(e, [y - 1, x - 1]))) {
@@ -207,6 +207,7 @@ function round(x: number, y: number) {
   }, 700);
 }
 
+// restarts game
 function restart() {
   computer.value = [
     [false, false, false],
@@ -223,6 +224,14 @@ function restart() {
   has_won.value = false;
   has_lost.value = false;
   tie.value = false;
+
+  if (Math.random() < 0.5) {
+    clickable.value = false;
+    setTimeout(() => {
+      model_move();
+      clickable.value = true;
+    }, 400);
+  }
 }
 </script>
 
@@ -276,9 +285,9 @@ function restart() {
       </button>
     </div>
     <!-- test button -->
-    <button
+    <!-- <button
       @click="model_move"
       class="bg-dark_green w-[20px] h-[20px] mt-3"
-    ></button>
+    ></button> -->
   </div>
 </template>
