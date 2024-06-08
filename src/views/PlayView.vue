@@ -1,10 +1,6 @@
 <script setup lang="ts">
 import { ref } from "vue";
 
-interface PingResponse {
-  pong: string;
-}
-
 const player = ref([
   [false, false, false],
   [false, false, false],
@@ -21,6 +17,7 @@ const clickable = ref(true);
 const has_won = ref(false);
 const has_lost = ref(false);
 const tie = ref(false);
+const game_has_started = ref(false);
 
 // transform board to a flattened array, which fits format in python
 function transform_board(): number[] {
@@ -183,6 +180,7 @@ function check_condition(actor: Array<Array<boolean>>, player: boolean) {
 
 // a round of tic-tac-toe, where player and computer makes moves
 function round(x: number, y: number) {
+  game_has_started.value = true;
   // check if there exists possible moves
   if (!get_possible_moves().find((e) => arraysEqual(e, [y - 1, x - 1]))) {
     console.log("no possible moves found");
@@ -224,6 +222,7 @@ function restart() {
   has_won.value = false;
   has_lost.value = false;
   tie.value = false;
+  game_has_started.value = false;
 
   if (Math.random() < 0.5) {
     clickable.value = false;
@@ -278,7 +277,11 @@ function restart() {
       </div>
     </div>
     <div class="mt-8 w-full flex justify-center">
-      <button @click="restart" class="border-dark_green border-2 rounded-full">
+      <button
+        v-if="game_has_started"
+        @click="restart"
+        class="border-dark_green border-2 rounded-full"
+      >
         <span class="text-2xl text-dark_green p-3">{{
           has_won || has_lost || tie ? "Play again" : "Restart Game"
         }}</span>

@@ -1,6 +1,6 @@
 # tic-tac-toe, a vue application
 
-## install dependencies
+## Install dependencies
 
 - npm install
 
