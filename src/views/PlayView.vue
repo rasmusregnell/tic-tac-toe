@@ -233,25 +233,22 @@ function restart() {
     game_has_started.value = true;
   }
 }
+
+function get_result_text() {
+  if (has_won.value) return "You won!";
+  if (tie.value) return "It is a tie!";
+  if (has_lost.value) return "You Lost!";
+}
 </script>
 
 <template>
   <div class="w-full h-full flex flex-col justify-center items-center">
-    <div v-show="has_won" class="w-full flex justify-center">
+    <div
+      :class="`w-full h-[51px] flex justify-center ${has_won || tie || has_lost ? '' : 'invisible'}`"
+    >
       <span
-        :class="`mb-8 text-dark_green text-2xl ${has_won ? '' : 'invisible'}`"
-        >You Won!</span
-      >
-    </div>
-    <div v-show="tie" class="w-full flex justify-center">
-      <span :class="`mb-8 text-dark_green text-2xl ${tie ? '' : 'invisible'}`"
-        >It is a tie!</span
-      >
-    </div>
-    <div v-show="has_lost" class="w-full flex justify-center">
-      <span
-        :class="`mb-8 text-[#ff0000] text-2xl ${has_lost ? '' : 'invisible'}`"
-        >You Lost!</span
+        :class="`mb-8  text-2xl ${has_won || tie ? 'text-dark_green' : 'text-[#ff0000]'}`"
+        >{{ get_result_text() }}</span
       >
     </div>
     <div class="w-[400px] h-[400px] flex-col">
