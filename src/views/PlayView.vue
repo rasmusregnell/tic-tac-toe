@@ -59,6 +59,22 @@ function update_board(arr: number[]): void {
   }
 }
 
+// let REST know that the game is over
+async function game_over() {
+  try {
+    const response = await fetch("http://localhost:5175/gameOver", {
+      method: "GET",
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+  } catch (error) {
+    console.error("Error sending data and receiving response:", error);
+    throw error; // Propagate error to the caller
+  }
+}
+
 // model from rest makes move, updates board
 async function model_move() {
   // board is transfromed to fit expected format number[]
@@ -170,17 +186,23 @@ function round(x: number, y: number) {
   // check if there exists possible moves
   if (!get_possible_moves().find((e) => arraysEqual(e, [y - 1, x - 1]))) {
     console.log("no possible moves found");
+    game_over();
     return;
   }
 
   player.value[y - 1][x - 1] = true;
   if (check_condition(player.value, true)) {
+    game_over();
     return;
   }
 
   clickable.value = false;
   setTimeout(() => {
-    model_move().then((e) => check_condition(computer.value, false));
+    model_move().then((e) => {
+      if (check_condition(computer.value, false)) {
+        game_over();
+      }
+    });
     clickable.value = true;
   }, 700);
 }
