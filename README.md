@@ -1,5 +1,7 @@
 # tic-tac-toe, a vue application
 
+![alt text](https://github.com/rasmusregnell/tic-tac-toe/blob/main/public/game.png?raw=true)
+
 ## install dependencies
 
 - npm install
