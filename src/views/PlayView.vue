@@ -230,20 +230,27 @@ function restart() {
       model_move();
       clickable.value = true;
     }, 400);
+    game_has_started.value = true;
   }
 }
 </script>
 
 <template>
   <div class="w-full h-full flex flex-col justify-center items-center">
-    <div class="w-full flex justify-center">
-      <span v-if="has_won" class="mb-8 text-dark_green text-2xl">You Won!</span>
+    <div v-show="has_won" class="w-full flex justify-center">
+      <span
+        :class="`mb-8 text-dark_green text-2xl ${has_won ? '' : 'invisible'}`"
+        >You Won!</span
+      >
     </div>
-    <div class="w-full flex justify-center">
-      <span v-if="tie" class="mb-8 text-dark_green text-2xl">It is a tie!</span>
+    <div v-show="tie" class="w-full flex justify-center">
+      <span :class="`mb-8 text-dark_green text-2xl ${tie ? '' : 'invisible'}`"
+        >It is a tie!</span
+      >
     </div>
-    <div class="w-full flex justify-center">
-      <span v-if="has_lost" class="mb-8 text-[#ff0000] text-2xl"
+    <div v-show="has_lost" class="w-full flex justify-center">
+      <span
+        :class="`mb-8 text-[#ff0000] text-2xl ${has_lost ? '' : 'invisible'}`"
         >You Lost!</span
       >
     </div>
@@ -278,9 +285,8 @@ function restart() {
     </div>
     <div class="mt-8 w-full flex justify-center">
       <button
-        v-if="game_has_started"
         @click="restart"
-        class="border-dark_green border-2 rounded-full"
+        :class="`border-dark_green border-2 rounded-full ${game_has_started ? '' : 'invisible'}`"
       >
         <span class="text-2xl text-dark_green p-3">{{
           has_won || has_lost || tie ? "Play again" : "Restart Game"
